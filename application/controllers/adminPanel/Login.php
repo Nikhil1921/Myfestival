@@ -41,10 +41,11 @@ class Login extends CI_Controller {
 
     		$post = [
     			'mobile'   	 => $this->input->post('mobile'),
-    			'password'   => my_crypt($this->input->post('password'))
+    			'password'   => my_crypt($this->input->post('password')),
+                'is_deleted' => 0
     		];
 
-    		$user = $this->main->get($this->table, 'id adminId, name, mobile, email', $post);
+    		$user = $this->main->get($this->table, 'id adminId, name, mobile, email, role', $post);
     		if ($user) {
     			$this->session->set_userdata($user);
     			return redirect(admin());
@@ -63,7 +64,8 @@ class Login extends CI_Controller {
             return $this->template->load(admin('auth/template'), admin('auth/send_otp'), $data);   
         }else{
             $post = [
-                'email'     => $this->input->post('email')
+                'email'      => $this->input->post('email'),
+                'is_deleted' => 0
             ];
 
             $user = $this->main->get($this->table, 'email', $post);
@@ -111,6 +113,7 @@ class Login extends CI_Controller {
             $post = [
                 'email'           => $this->session->emailCheck,
                 'otp'             => $this->input->post('otp'),
+                'is_deleted'      => 0,
                 'last_update >= ' => date('Y-m-d H:i:s', strtotime('-5 minutes'))
             ];
 

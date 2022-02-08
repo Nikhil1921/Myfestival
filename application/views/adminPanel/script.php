@@ -48,7 +48,7 @@
                 type: "POST",
                 data: function(data) {
                     data.star_line_token = $('#'+"<?= strtolower(str_replace(" ", '_', APP_NAME)).'_token' ?>").val();
-                    data.formLoad = $('#formLoad').val();
+                    data.role = $('#role').val();
                 },
                 complete: function(response) {
                     var data = JSON.parse(response.responseText).star_line_token;
@@ -59,19 +59,6 @@
                 "targets": 'target',
                 "orderable": false,
             },],
-        });
-
-        $('.change-form').click(function(){
-            if ($(this).hasClass('active') !== true) {
-                let status = $(this).data('status');
-                
-                if (status == 'australia_visa' || status == 'canada_visa' ) $("#change-country").html('Current Status');
-                else $("#change-country").html('Country');
-
-                $("#formLoad").val(status);
-                table.ajax.reload();
-            } else
-                return false;
         });
 
         <?php endif ?>
@@ -90,16 +77,6 @@
         if (result.value) $('#'+id).submit();
       })
     }
-
-    function assign(id) {
-      $("#lead_id").val(id);
-    }
-
-    function consultant(id) {
-      $("#consultant_id").val(id);
-      $("#consultantForm").val($("#formLoad").val());
-    }
-
 
     <?php if (isset($showImages)): ?>
 

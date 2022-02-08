@@ -8,11 +8,11 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
-            <?= form_label('Full Name') ?>
+            <?= form_label('Name') ?>
             <?= form_input([
             'class' => "form-control",
             'readonly' => "readonly",
-            'value' => $data['fullname']
+            'value' => $data['name']
             ]) ?>
           </div>
         </div>
@@ -34,12 +34,6 @@
             'readonly' => "readonly",
             'value' => $data['email']
             ]) ?>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <?= form_label('Frame') ?><br>
-            <?= img(['src' => 'assets/images/frame/'.$data['frame'], 'alt' => 'No Frame', 'width' => 150]) ?>
           </div>
         </div>
       </div>

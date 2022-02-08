@@ -6,9 +6,11 @@
         <div class="col-sm-10">
           <h5 class="card-title m-0"><?= ucwords($title) ?> List</h5>
         </div>
-          <div class="col-sm-2">
+        <?php if (check_access($name, 'add')): ?>
+        <div class="col-sm-2">
           <?= anchor($url.'/add', 'Add', 'class="btn btn-block btn-outline-success btn-sm"'); ?>
         </div>
+        <?php endif ?>
       </div>
     </div>
     <div class="card-body table-responsive">

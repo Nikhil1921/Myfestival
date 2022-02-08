@@ -14,6 +14,7 @@ class Upcoming extends MY_Controller {
 
 	public function index()
 	{
+        verify_access($this->name, 'list');
         $data['name'] = $this->name;
 		$data['title'] = $this->title;
         $data['url'] = $this->redirect;
@@ -34,10 +35,21 @@ class Upcoming extends MY_Controller {
             $sub_array[] = ucwords($row->event);
             $sub_array[] = date('d-m-Y', strtotime($row->event_date));
             $sub_array[] = img(['src' => 'assets/images/event/'.$row->image, 'height' => 50, 'width' => 50]);
-
-            $sub_array[] = '<div class="ml-0 table-display row">'.anchor($this->redirect.'/view/'.e_id($row->id), '<i class="fa fa-eye"></i>', 'class="btn btn-outline-info mr-2"').anchor($this->redirect.'/upload/'.e_id($row->id), '<i class="fa fa-image"></i>', 'class="btn btn-outline-secondary mr-2"').anchor($this->redirect.'/update/'.e_id($row->id), '<i class="fa fa-edit"></i>', 'class="btn btn-outline-primary mr-2"').
-                    form_open($this->redirect.'/delete', ['id' => e_id($row->id)], ['id' => e_id($row->id)]).form_button([ 'content' => '<i class="fas fa-trash"></i>','type'  => 'button','class' => 'btn btn-outline-danger', 'onclick' => "remove(".e_id($row->id).")"]).form_close().'</div>';
-
+            
+            $action = '<div class="ml-0 table-display row">';
+            
+            if (check_access($this->name, 'list'))
+                $action .= anchor($this->redirect.'/view/'.e_id($row->id), '<i class="fa fa-eye"></i>', 'class="btn btn-outline-info mr-2"');
+            if (check_access($this->name, 'upload'))
+                $action .= anchor($this->redirect.'/upload/'.e_id($row->id), '<i class="fa fa-image"></i>', 'class="btn btn-outline-secondary mr-2"');
+            if (check_access($this->name, 'update'))
+                $action .= anchor($this->redirect.'/update/'.e_id($row->id), '<i class="fa fa-edit"></i>', 'class="btn btn-outline-primary mr-2"');
+            if (check_access($this->name, 'delete'))
+                $action .= form_open($this->redirect.'/delete', ['id' => e_id($row->id)], ['id' => e_id($row->id)]).form_button([ 'content' => '<i class="fas fa-trash"></i>','type'  => 'button','class' => 'btn btn-outline-danger', 'onclick' => "remove(".e_id($row->id).")"]).form_close();
+            
+            $action .= '</div>';
+            
+            $sub_array[] = $action;
             $data[] = $sub_array;  
             $sr++;
         }
@@ -58,6 +70,7 @@ class Upcoming extends MY_Controller {
 
     public function add()
 	{
+        verify_access($this->name, 'add');
         $this->form_validation->set_rules($this->validate);
         if ($this->form_validation->run() == FALSE)
         {
@@ -97,6 +110,7 @@ class Upcoming extends MY_Controller {
 
 	public function view($id)
     {
+        verify_access($this->name, 'list');
         $data['name'] = $this->name;
         $data['title'] = $this->title;
         $data['operation'] = "view";
@@ -111,6 +125,7 @@ class Upcoming extends MY_Controller {
 
 	public function edit($id)
 	{
+        verify_access($this->name, 'update');
         $data['name'] = $this->name;
         $data['id'] = $id;
 		$data['title'] = $this->title;
@@ -130,6 +145,7 @@ class Upcoming extends MY_Controller {
 
     public function update($id)
     {
+        verify_access($this->name, 'update');
         $this->form_validation->set_rules($this->validate);
         
         if ($this->form_validation->run() == FALSE)
@@ -162,6 +178,7 @@ class Upcoming extends MY_Controller {
 
     public function upload($id)
     {
+        verify_access($this->name, 'upload');
         if ($this->input->server('REQUEST_METHOD') === 'GET') 
         {
             $data['name'] = $this->name;
@@ -247,6 +264,7 @@ class Upcoming extends MY_Controller {
 
     public function delete()
     {
+        verify_access($this->name, 'delete');
         $id = $this->main->update(['id' => d_id($this->input->post('id'))], ['is_deleted' => 1], $this->table);
 
         flashMsg($id, ucwords($this->title)." Deleted Successfully.", ucwords($this->title)." Not Deleted. Try again.", $this->redirect);

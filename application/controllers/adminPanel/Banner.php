@@ -14,6 +14,7 @@ class Banner extends MY_Controller {
 
 	public function index()
 	{
+        verify_access($this->name, 'list');
         $data['name'] = $this->name;
 		$data['title'] = $this->title;
         $data['url'] = $this->redirect;
@@ -35,7 +36,8 @@ class Banner extends MY_Controller {
             
             $action = '<div class="ml-0 table-display row">';
             
-            $action .= form_open($this->redirect.'/delete', ['id' => e_id($row->id)], ['id' => e_id($row->id)]).form_button([ 'content' => '<i class="fas fa-trash"></i>','type'  => 'button','class' => 'btn btn-outline-danger', 'onclick' => "remove(".e_id($row->id).")"]).form_close();
+            if (check_access($this->name, 'delete'))
+                $action .= form_open($this->redirect.'/delete', ['id' => e_id($row->id)], ['id' => e_id($row->id)]).form_button([ 'content' => '<i class="fas fa-trash"></i>','type'  => 'button','class' => 'btn btn-outline-danger', 'onclick' => "remove(".e_id($row->id).")"]).form_close();
 
             $action .= '</div>';
             $sub_array[] = $action;
@@ -56,6 +58,7 @@ class Banner extends MY_Controller {
 
     public function add()
     {
+        verify_access($this->name, 'add');
         if (empty($_FILES['image']['name'])) {
             flashMsg(
                 0, '', 'Please Select Banner Image.', $this->redirect
@@ -82,6 +85,7 @@ class Banner extends MY_Controller {
 
     public function delete()
     {
+        verify_access($this->name, 'delete');
         $id = d_id($this->input->post('id'));
         $unlink = assets('images/banner/').$this->main->check($this->table, ['id' => $id], 'banner');
         if ($unlink && file_exists($unlink))

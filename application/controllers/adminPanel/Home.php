@@ -59,6 +59,10 @@ class Home extends MY_Controller {
     {
         $data['title'] = 'dashboard';
         $data['name'] = 'dashboard';
+        $data['upcoming'] = $this->main->count('upcoming', ['event_date >= ' => date('Y-m-d'), 'is_deleted' => 0]);
+        $data['category'] = $this->main->count('category', ['is_deleted' => 0]);
+        $data['users'] = $this->session->role == 'Admin' ? $this->main->count('users', ['is_deleted' => 0]) : $this->main->count('users', ['is_deleted' => 0, 'created_by' => $this->session->adminId]);
+        $data['banner'] = $this->main->count('banner', []);
         
         return $this->template->load(admin('template'), admin('dashboard'), $data);
     }

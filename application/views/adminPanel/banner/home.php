@@ -6,6 +6,7 @@
         <div class="col-6">
           <h5 class="card-title m-0"><?= ucwords($title) ?> List</h5>
         </div>
+        <?php if (check_access($name, 'add')): ?>
         <div class="col-6">
           <?= form_open_multipart($url.'/add', '') ?>
           <div class="row">
@@ -33,6 +34,7 @@
             </div>
           </div>
         </div>
+        <?php endif ?>
       </div>
     </div>
     <div class="card-body table-responsive">

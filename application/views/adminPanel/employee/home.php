@@ -18,9 +18,9 @@
         <thead>
           <tr>
             <th class="target">Sr. No.</th>
-            <th>Event</th>
-            <th>Date</th>
-            <th class="target">Image</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Email</th>
             <th class="target">Action</th>
           </tr>
         </thead>
@@ -30,3 +30,5 @@
     </div>
   </div>
 </div>
+
+<input type="hidden" id="role" value="Employee" />

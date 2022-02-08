@@ -78,15 +78,27 @@
               <li class="nav-item">
                 <?= anchor(admin('users'), '<i class="nav-icon fas fa-users"></i><p>Users</p>', 'class="nav-link '.(($name == 'users') ? 'active' : '').'"') ?>
               </li>
+              <?php if (check_access('employee', 'add')): ?>
+              <li class="nav-item">
+                <?= anchor(admin('employee'), '<i class="nav-icon fas fa-users"></i><p>Employees</p>', 'class="nav-link '.(($name == 'employee') ? 'active' : '').'"') ?>
+              </li>
+              <?php endif ?>
+              <?php if (check_access('sub-admin', 'add')): ?>
+              <li class="nav-item">
+                <?= anchor(admin('sub-admin'), '<i class="nav-icon fas fa-users"></i><p>Sub Admin</p>', 'class="nav-link '.(($name == 'sub-admin') ? 'active' : '').'"') ?>
+              </li>
+              <?php endif ?>
               <li class="nav-item">
                 <?= anchor(admin('banner'), '<i class="nav-icon fas fa-image"></i><p>Banners</p>', 'class="nav-link '.(($name == 'banner') ? 'active' : '').'"') ?>
               </li>
               <li class="nav-item">
                 <?= anchor(admin('profile'), '<i class="nav-icon fas fa-user"></i><p>Profile</p>', 'class="nav-link '.(($name == 'profile') ? 'active' : '').'"') ?>
               </li>
+              <?php if (check_access('backup', 'add')): ?>
               <li class="nav-item">
                 <?= anchor(admin('home/backup'), '<i class="nav-icon fas fa-database"></i><p>Backup</p>', 'class="nav-link '.(($name == 'home/backup') ? 'active' : '').'"') ?>
               </li>
+              <?php endif ?>
             </ul>
           </nav>
         </div>

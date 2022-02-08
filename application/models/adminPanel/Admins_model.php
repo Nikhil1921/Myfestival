@@ -2,7 +2,7 @@
 /**
 *
 */
-class Users_model extends CI_Model 
+class Admins_model extends CI_Model 
 {
 	
 	public function __construct()
@@ -10,20 +10,17 @@ class Users_model extends CI_Model
 		parent::__construct();
 	}
 
-	public $table = "users u";  
-	public $select_column = ['u.id', 'u.fullname', 'u.mobile', 'u.email', 'u.frame'];
-	public $search_column = ['u.fullname', 'u.mobile', 'u.email', 'u.frame'];
-    public $order_column = [null, 'u.fullname', 'u.mobile', 'u.email', 'u.frame', null];
-	public $order = ['u.id' => 'DESC'];
+	public $table = "admins a";  
+	public $select_column = ['a.id', 'a.name', 'a.mobile', 'a.email'];
+	public $search_column = ['a.name', 'a.mobile', 'a.email'];
+    public $order_column = [null, 'a.name', 'a.mobile', 'a.email', null];
+	public $order = ['a.id' => 'DESC'];
 
-	public function make_query()  
+	public function make_query()
 	{  
         $this->db->select($this->select_column)	
                  ->from($this->table)
-                 ->where(['u.is_deleted' => 0]);
-        
-        if ($this->session->role != 'Admin') 
-            $this->db->where(['u.created_by' => $this->session->adminId]);
+                 ->where(['a.is_deleted' => 0, 'a.role' => $this->input->post('role')]);
         
         $i = 0;
 
