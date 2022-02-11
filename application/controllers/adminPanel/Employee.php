@@ -186,18 +186,20 @@ class Employee extends MY_Controller {
         [
             'field' => 'mobile',
             'label' => 'Mobile',
-            'rules' => 'required|exact_length[10]|callback_mobile_check',
+            'rules' => 'required|numeric|exact_length[10]|callback_mobile_check',
             'errors' => [
                 'required' => "%s is Required",
-                'exact_length' => "%s is invalid"
+                'exact_length' => "%s is invalid",
+                'numeric' => "%s is invalid"
             ]
         ],
         [
             'field' => 'email',
             'label' => 'Email',
-            'rules' => 'required|callback_email_check',
+            'rules' => 'required|valid_email|callback_email_check',
             'errors' => [
-                'required' => "%s is Required"
+                'required' => "%s is Required",
+                'valid_email' => "%s is invalid",
             ]
         ],
         [
