@@ -2,7 +2,7 @@
 /**
 *
 */
-class Category_model extends CI_Model 
+class Demo_frame_model extends CI_Model 
 {
 	
 	public function __construct()
@@ -10,18 +10,17 @@ class Category_model extends CI_Model
 		parent::__construct();
 	}
 
-	public $table = "category c";  
-	public $select_column = ['c.id', 'c.cat_name', 'c.image'];
-	public $search_column = ['c.cat_name'];
-    public $order_column = [null, 'c.cat_name', null, null];
-	public $order = ['c.sorting' => 'ASC'];
+    public $table = "demo_frame f";
+    public $select_column = ['f.id', 'CONCAT("images/banner/", f.frame) frame'];
+    public $search_column = ['f.id', 'f.frame'];
+    public $order_column = [null];
+    public $order = ['f.id' => 'DESC'];
 
 	public function make_query()  
-	{  
-        $this->db->select($this->select_column)	
-            ->from($this->table)
-            ->where(['c.is_deleted' => 0]);
-        
+    {  
+        $this->db->select($this->select_column) 
+            ->from($this->table);
+
         $i = 0;
 
         foreach ($this->search_column as $item) 
@@ -53,16 +52,5 @@ class Category_model extends CI_Model
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
-	}
-
-    public function sort($table, $post)
-    {
-        $this->db->trans_start();
-        foreach ($post as $key => $v)
-            $this->db->where('id', d_id($v['id']))->update($table, ['sorting' => $v['position']]);
-        
-        $this->db->trans_complete();
-
-        return $this->db->trans_status();
     }
 }

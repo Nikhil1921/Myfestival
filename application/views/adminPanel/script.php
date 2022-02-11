@@ -1,8 +1,9 @@
 <script type="text/javascript" charset="utf-8">
+    var table;
 	$(document).ready(function(){
 		setTimeout(function(){ $(".alert-messages").remove(); }, 3000);
 		<?php if (isset($dataTables)): ?>
-      	var table = $('.datatable').DataTable({
+      	table = $('.datatable').DataTable({
             dom: 'Bfrtip',
             lengthMenu: [
                 [ 10, 25, 50, 100, -1 ],
@@ -31,6 +32,7 @@
                 visible: false
             } ],
             "processing": true,
+            "rowReorder": '<?= $name ?>' == 'category' ? true : false,
             "serverSide": true,
             'language': {
                 'loadingRecords': '&nbsp;',
@@ -53,6 +55,9 @@
                 complete: function(response) {
                     var data = JSON.parse(response.responseText).star_line_token;
                     $('#'+"<?= strtolower(str_replace(" ", '_', APP_NAME)).'_token' ?>").val(data);
+                    $("input[data-bootstrap-switch]").each(function(){
+                        $(this).bootstrapSwitch();
+                    });
                 },
             },
             "columnDefs": [{
@@ -61,8 +66,59 @@
             },],
         });
 
+        if (table != undefined) {
+            table.on('row-reorder', function(e, diff, edit) {
+
+                var result = [];
+                
+                for (var i = 0, ien = diff.length; i < ien; i++)
+                    result.push({ id: $(table.row(diff[i].node).data()[1]).data('id'), position: diff[i].newData });
+                
+                if (result.length > 0) {
+                    $.ajax({
+                        url: '<?= base_url($url) ?>/sort',
+                        type: 'POST',
+                        data: { sort: result },
+                        dataType: "JSON",
+                        success: function(result) {
+                            Swal.fire(
+                                result.success === false ? "Sorry!" : "Success!",
+                                result.message,
+                                result.success === false ? "error" : "success",
+                            );
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            Swal.fire("Sorry!", "Something is not going good. Please try later.", "error");
+                        }
+                    });
+                }
+            });
+        }
+
         <?php endif ?>
 	});
+    <?php if (isset($dataTables)): ?>
+        function change_user_type(id, user_type) {
+            $.ajax({
+                type:'POST',
+                url: "<?= base_url($url).'/change-user-type/' ?>",
+                cache:false,
+                data: {id: id, user_type: user_type},
+                dataType: 'json',
+                success:function(data){
+                    Swal.fire(
+                        data.error ? "Sorry!" : "Success!",
+                        data.message,
+                        data.error ? "error" : "success",
+                    );
+                    table.ajax.reload();
+                },
+                error: function(data){
+                    Swal.fire("Sorry!", "Something is not going good. Please try later.", "error");
+                }
+            });
+        }
+    <?php endif ?>
     
     function remove(id) {
       Swal.fire({

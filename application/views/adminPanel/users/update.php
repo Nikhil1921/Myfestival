@@ -63,7 +63,7 @@
             <?= form_error('password') ?>
           </div>
         </div>
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
           <div class="form-group">
             <?= form_label('Select Frame', 'frame') ?>
             <div class="input-group">
@@ -79,13 +79,13 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-6">
+        </div> -->
+        <!-- <div class="col-md-6">
           <div class="form-group">
             <?= form_label('Frame') ?><br>
             <?= img(['src' => 'assets/images/frame/'.$data['frame'], 'height' => 100, 'width' => 100,'alt' => 'No Frame']) ?>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="card-footer">

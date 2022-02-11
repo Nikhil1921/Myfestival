@@ -2,7 +2,7 @@
 /**
 *
 */
-class Category_model extends CI_Model 
+class Push_notification_model extends CI_Model 
 {
 	
 	public function __construct()
@@ -10,17 +10,17 @@ class Category_model extends CI_Model
 		parent::__construct();
 	}
 
-	public $table = "category c";  
-	public $select_column = ['c.id', 'c.cat_name', 'c.image'];
-	public $search_column = ['c.cat_name'];
-    public $order_column = [null, 'c.cat_name', null, null];
-	public $order = ['c.sorting' => 'ASC'];
+	public $table = "push_notification p";  
+	public $select_column = ['p.id', 'p.notification', 'p.image'];
+	public $search_column = ['p.notification'];
+    public $order_column = [null, 'p.notification', null, null];
+	public $order = ['p.id' => 'DESC'];
 
 	public function make_query()  
 	{  
         $this->db->select($this->select_column)	
             ->from($this->table)
-            ->where(['c.is_deleted' => 0]);
+            ->where(['p.is_deleted' => 0]);
         
         $i = 0;
 
@@ -54,15 +54,4 @@ class Category_model extends CI_Model
             $this->db->order_by(key($order), $order[key($order)]);
         }
 	}
-
-    public function sort($table, $post)
-    {
-        $this->db->trans_start();
-        foreach ($post as $key => $v)
-            $this->db->where('id', d_id($v['id']))->update($table, ['sorting' => $v['position']]);
-        
-        $this->db->trans_complete();
-
-        return $this->db->trans_status();
-    }
 }

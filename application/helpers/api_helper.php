@@ -4,7 +4,7 @@ if ( ! function_exists('post'))
     function post()
     {
         $CI =& get_instance();
-        if ($CI->input->server('REQUEST_METHOD') == "POST") {
+        if ($CI->input->server('REQUEST_METHOD') == "POST" || $CI->input->server('REQUEST_METHOD') == "post") {
             return TRUE;
         }else{
             echo '<html>
@@ -49,7 +49,7 @@ if ( ! function_exists('get'))
     function get()
     {
         $CI =& get_instance();
-        if ($CI->input->server('REQUEST_METHOD') == "GET") {
+        if ($CI->input->server('REQUEST_METHOD') == "GET" || $CI->input->server('REQUEST_METHOD') == "get") {
             return TRUE;
         }else{
             echo '<html>
@@ -93,7 +93,6 @@ if ( ! function_exists('verifyRequiredParams'))
 {
     function verifyRequiredParams($required_fields)
     {
-
         $CI =& get_instance();
         $error = false;
         $error_fields = "";

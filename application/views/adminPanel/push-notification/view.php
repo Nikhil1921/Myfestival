@@ -8,40 +8,29 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
-            <?= form_label('Full Name') ?>
+            <?= form_label('Notification') ?>
             <?= form_input([
             'class' => "form-control",
             'readonly' => "readonly",
-            'value' => $data['fullname']
+            'value' => $data['notification']
             ]) ?>
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <?= form_label('Mobile') ?>
-            <?= form_input([
+            <?= img(['src' => 'assets/images/push-notification/'.$data['image'], 'alt' => 'No Image', 'height' => "100", 'width' => "100"]) ?>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <?= form_label('Details') ?>
+            <?= form_textarea([
             'class' => "form-control",
             'readonly' => "readonly",
-            'value' => $data['mobile']
+            'value' => $data['details']
             ]) ?>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <?= form_label('Email') ?>
-            <?= form_input([
-            'class' => "form-control",
-            'readonly' => "readonly",
-            'value' => $data['email']
-            ]) ?>
-          </div>
-        </div>
-        <!-- <div class="col-md-6">
-          <div class="form-group">
-            <?= form_label('Frame') ?><br>
-            <?= img(['src' => 'assets/images/frame/'.$data['frame'], 'alt' => 'No Frame', 'width' => 150]) ?>
-          </div>
-        </div> -->
       </div>
     </div>
     <div class="card-footer">

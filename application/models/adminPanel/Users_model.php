@@ -11,7 +11,7 @@ class Users_model extends CI_Model
 	}
 
 	public $table = "users u";  
-	public $select_column = ['u.id', 'u.fullname', 'u.mobile', 'u.email', 'u.frame'];
+	public $select_column = ['u.id', 'u.fullname', 'u.mobile', 'u.email', 'u.frame', 'u.user_type'];
 	public $search_column = ['u.fullname', 'u.mobile', 'u.email', 'u.frame'];
     public $order_column = [null, 'u.fullname', 'u.mobile', 'u.email', 'u.frame', null];
 	public $order = ['u.id' => 'DESC'];

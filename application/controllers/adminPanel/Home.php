@@ -71,6 +71,7 @@ class Home extends MY_Controller {
     {
         $data['title'] = 'profile';
         $data['name'] = 'profile';
+        $data['data'] = $this->main->get('site_configs', 'conf_val', ['conf_type' => 'contact_no']);
 
         $this->form_validation->set_rules($this->profile);
         if ($this->form_validation->run() == FALSE)
@@ -115,6 +116,33 @@ class Home extends MY_Controller {
             $id = $this->main->update(['id' => $this->id], $post, $this->table);
 
             flashMsg($id, "Password Changed Successfully.", "Password Not Changed. Try again.", admin('profile'));
+        }
+    }
+
+    public function contactUsNo()
+    {
+        $data['title'] = 'profile';
+        $data['name'] = 'profile';
+
+        $this->form_validation->set_rules('conf_val', 'Contact no', 'required|numeric|exact_length[10]', ['required' => "%s is Required", 'numeric' => "%s is Invalid", 'exact_length' => "%s is Invalid"]);
+       
+        if ($this->form_validation->run() == FALSE)
+        {
+            return $this->template->load(admin('template'), admin('profile'), $data);
+        }
+        else
+        {
+            $post = [
+                'conf_val'   => $this->input->post('conf_val')
+            ];
+
+            if(! $this->main->check('site_configs', ['conf_type' => 'contact_no'], 'conf_val'))
+                $id = $this->main->add(['conf_type' => 'contact_no', 'conf_val' => $this->input->post('conf_val')], 'site_configs');
+            else
+                $id = $this->main->update(['conf_type' => 'contact_no'], $post, 'site_configs');
+
+
+            flashMsg($id, "Contact no Changed Successfully.", "Contact no Not Changed. Try again.", admin('profile'));
         }
     }
 

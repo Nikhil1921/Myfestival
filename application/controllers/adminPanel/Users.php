@@ -1,4 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Users extends MY_Controller {
 
@@ -8,7 +10,7 @@ class Users extends MY_Controller {
     }
 
 	private $name = 'users';
-    private $title = 'users';
+    private $title = 'Users';
     private $table = "users";
     protected $redirect = "users";
 
@@ -35,16 +37,20 @@ class Users extends MY_Controller {
             $sub_array[] = ucwords($row->fullname);
             $sub_array[] = $row->mobile;
             $sub_array[] = $row->email;
+            if (check_access($this->name, 'upload'))
+                $sub_array[] = $row->user_type;
+            if (check_access($this->name, 'upload'))
+                $sub_array[] = '<input type="checkbox" name="user_type" '.($row->user_type == 'Paid' ? "checked" : "").' data-bootstrap-switch data-off-color="danger" data-on-color="success" onchange="change_user_type('.e_id($row->id).', \''.($row->user_type == 'Paid' ? "Unpaid" : "Paid").'\')">';
 
             $action = '<div class="ml-0 table-display row">';
             
             if (check_access($this->name, 'list'))
                 $action .= anchor($this->redirect.'/view/'.e_id($row->id), '<i class="fa fa-eye"></i>', 'class="btn btn-outline-info mr-2"');
-            if (check_access($this->name, 'upload'))
+            if (check_access($this->name, 'upload') && $row->user_type == 'Paid')
                 $action .= anchor($this->redirect.'/upload/'.e_id($row->id), '<i class="fa fa-image"></i>', 'class="btn btn-outline-secondary mr-2"');
             if (check_access($this->name, 'update'))
                 $action .= anchor($this->redirect.'/update/'.e_id($row->id), '<i class="fa fa-edit"></i>', 'class="btn btn-outline-primary mr-2"');
-            if (check_access($this->name, 'delete'))
+            if (check_access($this->name, 'delete') && $row->user_type != 'Paid')
                 $action .= form_open($this->redirect.'/delete', ['id' => e_id($row->id)], ['id' => e_id($row->id)]).form_button([ 'content' => '<i class="fas fa-trash"></i>','type'  => 'button','class' => 'btn btn-outline-danger', 'onclick' => "remove(".e_id($row->id).")"]).form_close();
             
             $action .= '</div>';
@@ -88,7 +94,18 @@ class Users extends MY_Controller {
         }
         else
         {
-            $image = $this->image_upload();
+            $post = [
+                'fullname'    => $this->input->post('fullname'),
+                'mobile'      => $this->input->post('mobile'),
+                'email'       => $this->input->post('email'),
+                'password'    => my_crypt($this->input->post('password')),
+                'created_by'  => $this->session->adminId
+            ];
+            
+            $id = $this->main->add($post, $this->table);
+
+            flashMsg($id, ucwords($this->title)." Added Successfully.", ucwords($this->title)." Not Added. Try again.", $this->redirect);
+            /* $image = $this->image_upload();
 
             if (!$image['upload']) {
                 $data['name'] = $this->name;
@@ -111,7 +128,7 @@ class Users extends MY_Controller {
                 $id = $this->main->add($post, $this->table);
 
                 flashMsg($id, ucwords($this->title)." Added Successfully.", ucwords($this->title)." Not Added. Try again.", $this->redirect);
-            }
+            } */
         }
 	}
 
@@ -162,8 +179,20 @@ class Users extends MY_Controller {
         else
         {
             $updateId = $this->session->updateId;
+            $post = [
+                'fullname'    => $this->input->post('fullname'),
+                'mobile'      => $this->input->post('mobile'),
+                'email'       => $this->input->post('email')
+            ];
             
-            $image = $this->image_upload($this->input->post('frame'));
+            if ($this->input->post('password')) 
+                $post['password'] = my_crypt($this->input->post('password'));
+            
+            $id = $this->main->update(['id' => d_id($updateId)], $post, $this->table);
+
+            flashMsg($id, ucwords($this->title)." Updated Successfully.", ucwords($this->title)." Not Updated. Try again.", $this->redirect);
+            
+            /* $image = $this->image_upload($this->input->post('frame'));
 
             if (!$image['upload']) {
                 $this->session->set_flashdata('error', strip_tags($this->upload->display_errors()));
@@ -183,7 +212,7 @@ class Users extends MY_Controller {
                 $id = $this->main->update(['id' => d_id($updateId)], $post, $this->table);
 
                 flashMsg($id, ucwords($this->title)." Updated Successfully.", ucwords($this->title)." Not Updated. Try again.", $this->redirect);
-            }
+            } */
         }
     }
 
@@ -280,6 +309,48 @@ class Users extends MY_Controller {
 
 		flashMsg($id, ucwords($this->title)." Deleted Successfully.", ucwords($this->title)." Not Deleted. Try again.", $this->redirect);
 	}
+
+    public function import()
+    {
+        verify_access($this->name, 'add');
+        if(!empty($_FILES["import"]["name"])):
+            set_time_limit(0);
+            $object = \PhpOffice\PhpSpreadsheet\IOFactory::load($_FILES["import"]["tmp_name"]);
+            foreach($object->getWorksheetIterator() as $worksheet):
+                $highestRow = $worksheet->getHighestRow();
+                $highestColumn = $worksheet->getHighestColumn();
+                for($row=2; $row <= $highestRow; $row++):
+                    $mobile = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+                    if (! $this->main->check($this->table, ['mobile' => $mobile], 'id')) {
+                        $post[] = [
+                            'fullname' 		=> $worksheet->getCellByColumnAndRow(1, $row)->getValue(),
+                            'mobile' 		=> $mobile,
+                            'password'      => my_crypt(123456),
+                            'created_by'    => $this->session->adminId
+                        ];
+                    }
+                endfor;
+            endforeach;
+            
+            if ($post && $this->main->import_excel($post, $this->table))
+                $response = [
+                    'message' => "$this->title added.",
+                    'status' => true
+                ];
+            else
+                $response = [
+                    'message' => "$this->title not added. Try again.",
+                    'status' => false
+                ];
+        else:
+            $response = [
+                    'message' => "Select excel file to upload.",
+                    'status' => false
+                ];
+        endif;
+
+        flashMsg($response['status'], $response['message'], $response['message'], $this->redirect);
+    }
 
     public function password_check($str)
     {   
@@ -381,5 +452,23 @@ class Users extends MY_Controller {
         }
 
         return $return;
+    }
+
+    public function change_user_type()
+    {
+        $id = d_id($this->input->post('id'));
+        $user_type = $this->input->post('user_type');
+        if ($this->main->update(['id' => $id], ['user_type' => $user_type], $this->table)) {
+            $response = [
+                'error' => false,
+                'message' => "User status changed"
+            ];    
+        }else
+            $response = [
+                'error' => true,
+                'message' => "User status not changed"
+            ];
+        
+        die(json_encode($response));
     }
 }

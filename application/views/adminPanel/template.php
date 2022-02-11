@@ -78,12 +78,12 @@
               <li class="nav-item">
                 <?= anchor(admin('users'), '<i class="nav-icon fas fa-users"></i><p>Users</p>', 'class="nav-link '.(($name == 'users') ? 'active' : '').'"') ?>
               </li>
-              <?php if (check_access('employee', 'add')): ?>
+              <?php if (check_access('employee', 'list')): ?>
               <li class="nav-item">
                 <?= anchor(admin('employee'), '<i class="nav-icon fas fa-users"></i><p>Employees</p>', 'class="nav-link '.(($name == 'employee') ? 'active' : '').'"') ?>
               </li>
               <?php endif ?>
-              <?php if (check_access('sub-admin', 'add')): ?>
+              <?php if (check_access('sub-admin', 'list')): ?>
               <li class="nav-item">
                 <?= anchor(admin('sub-admin'), '<i class="nav-icon fas fa-users"></i><p>Sub Admin</p>', 'class="nav-link '.(($name == 'sub-admin') ? 'active' : '').'"') ?>
               </li>
@@ -92,8 +92,16 @@
                 <?= anchor(admin('banner'), '<i class="nav-icon fas fa-image"></i><p>Banners</p>', 'class="nav-link '.(($name == 'banner') ? 'active' : '').'"') ?>
               </li>
               <li class="nav-item">
+                <?= anchor(admin('demo-frame'), '<i class="nav-icon fas fa-image"></i><p>Demo Frame</p>', 'class="nav-link '.(($name == 'demo_frame') ? 'active' : '').'"') ?>
+              </li>
+              <li class="nav-item">
                 <?= anchor(admin('profile'), '<i class="nav-icon fas fa-user"></i><p>Profile</p>', 'class="nav-link '.(($name == 'profile') ? 'active' : '').'"') ?>
               </li>
+              <?php if (check_access('push_notification', 'list')): ?>
+              <li class="nav-item">
+                <?= anchor(admin('push-notification'), '<i class="nav-icon fas fa-users"></i><p>Push Notifications</p>', 'class="nav-link '.(($name == 'push_notification') ? 'active' : '').'"') ?>
+              </li>
+              <?php endif ?>
               <?php if (check_access('backup', 'add')): ?>
               <li class="nav-item">
                 <?= anchor(admin('home/backup'), '<i class="nav-icon fas fa-database"></i><p>Backup</p>', 'class="nav-link '.(($name == 'home/backup') ? 'active' : '').'"') ?>
@@ -160,12 +168,14 @@
   <script src="<?= assets('plugins/datatables-responsive/js/dataTables.responsive.min.js') ?>"></script>
   <script src="<?= assets('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') ?>"></script>
   <script src="<?= assets('plugins/sweetalert2/sweetalert2.all.min.js') ?>"></script>
+  <script src="<?= assets('plugins/bootstrap-switch/js/bootstrap-switch.min.js') ?>"></script>
   <script type="text/javascript" src="<?= assets('plugins/datatables/dataTables.buttons.min.js') ?>"></script>
   <script type="text/javascript" src="<?= assets('plugins/datatables/pdfmake.min.js') ?>"></script>
   <script type="text/javascript" src="<?= assets('plugins/datatables/vfs_fonts.js') ?>"></script>
   <script type="text/javascript" src="<?= assets('plugins/datatables/buttons.html5.min.js') ?>"></script>
   <script type="text/javascript" src="<?= assets('plugins/datatables/buttons.print.min.js') ?>"></script>
   <script type="text/javascript" src="<?= assets('plugins/datatables/buttons.colVis.min.js') ?>"></script>
+  <script type="text/javascript" src="<?= assets('plugins/datatables-rowreorder/js/dataTables.rowReorder.min.js') ?>"></script>
   <?php endif ?>
   <?php if (isset($select)): ?>
   <script src="<?= assets('plugins/select2/js/select2.full.min.js') ?>"></script>
@@ -183,7 +193,7 @@
   <script>
   $('.my-colorpicker2').colorpicker();
   $('.my-colorpicker2').on('colorpickerChange', function(event) {
-  $(this).children('div').children().children().css('color', event.color.toString());
+    $(this).children('div').children().children().css('color', event.color.toString());
   });
   </script>
   <?php endif ?>

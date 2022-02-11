@@ -26,7 +26,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Banner List Not Successful.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -55,7 +55,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "OTP Not Sent. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -71,6 +71,7 @@ class Api extends CI_Controller {
 
         $row = $this->main->get('otp', 'mobile, otp', $post);
 
+
         if($row)
         {
             $this->main->delete('otp', $row);
@@ -83,7 +84,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "OTP Not Checked. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -124,21 +125,21 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Signup Not Successful. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
     public function login()
     {
         post();
-        verifyRequiredParams(['mobile', 'password']);
+        verifyRequiredParams(['mobile', 'password', 'push_token']);
         $post = [
             'mobile'     => $this->input->post('mobile'),
             'password'   => my_crypt($this->input->post('password')),
             'is_deleted' => 0
         ];
 
-        if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame', $post))
+        if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame, user_type', $post))
         {
             if($row['frame'] != 'No Frame') {
                 foreach (explode(',', $row['frame']) as $k => $v) 
@@ -146,7 +147,7 @@ class Api extends CI_Controller {
                 $row['frame'] = $frames;
             }else
                 $row['frame'] = [];
-                
+            $this->main->update(['id' => $row['id']], ['push_token' => $this->input->post('push_token')], $this->table);
             $response['row'] = $row;
             $response['error'] = FALSE;
             $response['message'] ="Login Successful.";
@@ -156,7 +157,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Login Not Successful. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -165,7 +166,7 @@ class Api extends CI_Controller {
         get();
         $api = authenticate($this->table);
 
-        if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame', ['id' => $api]))
+        if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame, user_type', ['id' => $api]))
         {
             if($row['frame'] != 'No Frame') {
                 foreach (explode(',', $row['frame']) as $k => $v) 
@@ -183,7 +184,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Profile Not Successful. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -203,7 +204,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Mobile Already Exist.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
 
         if ($this->input->post('password'))
@@ -220,7 +221,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Profile Not Updated. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -240,7 +241,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Upcoming Events Not Successful. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -269,7 +270,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Upcoming Events Not Successful. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -289,7 +290,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Category List Not Successful. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -318,7 +319,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Category Not Successful. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -343,7 +344,7 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Password Not Updated. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
         }
     }
 
@@ -363,7 +364,46 @@ class Api extends CI_Controller {
         {
             $response["error"] = TRUE;
             $response['message'] = "Notification Not Successful. Please Try Again.";
-            echoRespnse(400, $response);
+            echoRespnse(200, $response);
+        }
+    }
+
+    public function site_configs()
+    {
+        get();
+        $api = authenticate($this->table);
+
+        if($row = $this->main->getall('site_configs', 'conf_type, conf_val', []))
+        {
+            $response['row'] = $row;
+            $response['error'] = FALSE;
+            $response['message'] ="Configs Successful.";
+            echoRespnse(200, $response);
+        }
+        else
+        {
+            $response["error"] = TRUE;
+            $response['message'] = "Configs Not Successful. Please Try Again.";
+            echoRespnse(200, $response);
+        }
+    }
+
+    public function demo_frames()
+    {
+        get();
+
+        if($row = $this->main->getall('demo_frame', 'CONCAT("'.assets('images/banner/').'", frame) frame', []))
+        {
+            $response['row'] = $row;
+            $response['error'] = FALSE;
+            $response['message'] ="Demo frames Successful.";
+            echoRespnse(200, $response);
+        }
+        else
+        {
+            $response["error"] = TRUE;
+            $response['message'] = "Demo frames Not Successful. Please Try Again.";
+            echoRespnse(200, $response);
         }
     }
 }

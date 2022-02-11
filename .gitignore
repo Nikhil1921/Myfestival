@@ -24,4 +24,6 @@ assets/images/event/*
 !assets/images/event/index.html
 assets/images/frame/*
 !assets/images/frame/index.html
+assets/images/push-notification/*
+!assets/images/push-notification/index.html
 sql

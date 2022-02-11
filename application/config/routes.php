@@ -11,6 +11,8 @@ $route['adminPanel/banner']['post'] = 'adminPanel/banner/get';
 $route['adminPanel/users']['post'] = 'adminPanel/users/get';
 $route['adminPanel/employee']['post'] = 'adminPanel/employee/get';
 $route['adminPanel/sub-admin']['post'] = 'adminPanel/sub-admin/get';
+$route['adminPanel/demo-frame']['post'] = 'adminPanel/demo-frame/get';
+$route['adminPanel/push-notification']['post'] = 'adminPanel/push-notification/get';
 $route['adminPanel/users/update/$1']['get'] = 'adminPanel/users/edit/$1';
 $route['adminPanel/upcoming']['post'] = 'adminPanel/upcoming/get';
 $route['adminPanel/upcoming/update/$1']['get'] = 'adminPanel/upcoming/edit/$1';
@@ -19,6 +21,7 @@ $route['adminPanel/category/update/$1']['get'] = 'adminPanel/category/edit/$1';
 
 $route['adminPanel/profile'] = 'adminPanel/home/profile';
 $route['adminPanel/changePassword'] = 'adminPanel/home/changePassword';
+$route['adminPanel/contactUsNo'] = 'adminPanel/home/contactUsNo';
 $route['adminPanel/forgotPassword'] = 'adminPanel/login/forgotPassword';
 $route['adminPanel/checkOtp'] = 'adminPanel/login/checkOtp';
 $route['adminPanel/unauthorized'] = 'adminPanel/home/unauthorized';

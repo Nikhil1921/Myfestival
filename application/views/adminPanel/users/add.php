@@ -63,7 +63,7 @@
             <?= form_error('password') ?>
           </div>
         </div>
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
           <div class="form-group">
             <?= form_label('Select Frame', 'frame') ?>
             <div class="input-group">
@@ -79,7 +79,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="card-footer">
