@@ -141,8 +141,8 @@ class Api extends CI_Controller {
 
         if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame, user_type', $post))
         {
-            if ($row['user_type'] == 'Un Paid') {
-                $row['frame'] = $this->main->getall('demo_frame', 'CONCAT("'.assets('images/banner/').'", frame) frame', []);
+            if ($row['user_type'] == 'Unpaid') {
+                $row['frame'] = $this->main->getall('demo_frame', 'CONCAT("'.assets('images/banner/').'", frame) img', []);
             }else{
                 if($row['frame'] != 'No Frame') {
                     foreach (explode(',', $row['frame']) as $k => $v) 
@@ -172,8 +172,8 @@ class Api extends CI_Controller {
 
         if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame, user_type, is_deleted', ['id' => $api]))
         {
-            if ($row['user_type'] == 'Un Paid') {
-                $row['frame'] = $this->main->getall('demo_frame', 'CONCAT("'.assets('images/banner/').'", frame) frame', []);
+            if ($row['user_type'] == 'Unpaid') {
+                $row['frame'] = $this->main->getall('demo_frame', 'CONCAT("'.assets('images/banner/').'", frame) img', []);
             }else{
                 if($row['frame'] != 'No Frame') {
                     foreach (explode(',', $row['frame']) as $k => $v) 
