@@ -141,12 +141,16 @@ class Api extends CI_Controller {
 
         if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame, user_type', $post))
         {
-            if($row['frame'] != 'No Frame') {
-                foreach (explode(',', $row['frame']) as $k => $v) 
-                    $frames[$k]['img'] = assets('images/frame/').$v;
-                $row['frame'] = $frames;
-            }else
-                $row['frame'] = [];
+            if ($row['user_type'] == 'Un Paid') {
+                $row['frame'] = $this->main->getall('demo_frame', 'CONCAT("'.assets('images/banner/').'", frame) frame', []);
+            }else{
+                if($row['frame'] != 'No Frame') {
+                    foreach (explode(',', $row['frame']) as $k => $v) 
+                        $frames[$k]['img'] = assets('images/frame/').$v;
+                    $row['frame'] = $frames;
+                }else
+                    $row['frame'] = [];
+            }
             $this->main->update(['id' => $row['id']], ['push_token' => $this->input->post('push_token')], $this->table);
             $response['row'] = $row;
             $response['error'] = FALSE;
@@ -166,15 +170,19 @@ class Api extends CI_Controller {
         get();
         $api = authenticate($this->table);
 
-        if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame, user_type', ['id' => $api]))
+        if($row = $this->main->get($this->table, 'id, fullname, mobile, email, frame, user_type, is_deleted', ['id' => $api]))
         {
-            if($row['frame'] != 'No Frame') {
-                foreach (explode(',', $row['frame']) as $k => $v) 
-                    $frames[$k]['img'] = assets('images/frame/').$v;
-                $row['frame'] = $frames;
-            }else
-                $row['frame'] = [];
-
+            if ($row['user_type'] == 'Un Paid') {
+                $row['frame'] = $this->main->getall('demo_frame', 'CONCAT("'.assets('images/banner/').'", frame) frame', []);
+            }else{
+                if($row['frame'] != 'No Frame') {
+                    foreach (explode(',', $row['frame']) as $k => $v) 
+                        $frames[$k]['img'] = assets('images/frame/').$v;
+                    $row['frame'] = $frames;
+                }else
+                    $row['frame'] = [];
+            }
+            
             $response['row'] = $row;
             $response['error'] = FALSE;
             $response['message'] ="Profile Successful.";
@@ -230,7 +238,7 @@ class Api extends CI_Controller {
         get();
         $api = authenticate($this->table);
 
-        if($row = $this->main->getall('upcoming', 'id, event, CONCAT("'.assets('images/event/').'", image) image, event_date', ['event_date >= ' => date('Y-m-d'), 'is_deleted' => 0]))
+        if($row = $this->main->getall('upcoming', 'id, event, CONCAT("'.assets('images/event/').'", image) image, event_date', ['event_date >= ' => date('Y-m-d'), 'is_deleted' => 0], 'event_date ASC'))
         {
             $response['row'] = $row;
             $response['error'] = FALSE;
@@ -279,7 +287,7 @@ class Api extends CI_Controller {
         get();
         $api = authenticate($this->table);
 
-        if($row = $this->main->getall('category', 'id, cat_name, CONCAT("'.assets('images/category/').'", image) image', ['is_deleted' => 0]))
+        if($row = $this->main->getall('category', 'id, cat_name, CONCAT("'.assets('images/category/').'", image) image', ['is_deleted' => 0], 'sorting ASC'))
         {
             $response['row'] = $row;
             $response['error'] = FALSE;
@@ -373,7 +381,7 @@ class Api extends CI_Controller {
         get();
         $api = authenticate($this->table);
 
-        if($row = $this->main->getall('site_configs', 'conf_type, conf_val', []))
+        if($row = $this->main->get('site_configs', 'conf_type, conf_val', ['conf_type' => 'contact_no']))
         {
             $response['row'] = $row;
             $response['error'] = FALSE;

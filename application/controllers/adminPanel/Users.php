@@ -312,7 +312,7 @@ class Users extends MY_Controller {
 
     public function import()
     {
-        verify_access($this->name, 'add');
+        verify_access($this->name, 'import');
         if(!empty($_FILES["import"]["name"])):
             set_time_limit(0);
             $object = \PhpOffice\PhpSpreadsheet\IOFactory::load($_FILES["import"]["tmp_name"]);

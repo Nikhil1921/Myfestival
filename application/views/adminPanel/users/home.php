@@ -6,7 +6,7 @@
         <div class="col-sm-6">
           <h5 class="card-title m-0"><?= ucwords($title) ?> List</h5>
         </div>
-        <?php if (check_access($name, 'add')): ?>
+        <?php if (check_access($name, 'import')): ?>
         <div class="col-sm-2">
         <?= form_open_multipart($url . '/import') ?>
           <div class="form-group">
@@ -23,7 +23,7 @@
         <?= form_close() ?>
         </div>
         <?php endif ?>
-        <?php if (check_access($name, 'add')): ?>
+        <?php if (check_access($name, 'import')): ?>
         <div class="col-sm-2">
           <?= anchor('import-users.xlsx', 'Download demo', 'class="btn btn-block btn-outline-primary btn-sm"'); ?>
         </div>

@@ -79,6 +79,7 @@
       </div>
     </div>
   </div>
+  <?php if($this->session->role == 'Admin'): ?>
   <div class="col-md-4">
     <div class="card card-danger card-outline">
       <div class="card-body box-profile">
@@ -109,4 +110,5 @@
       </div>
     </div>
   </div>
+  <?php endif ?>
 </div>

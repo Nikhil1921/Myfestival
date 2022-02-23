@@ -303,28 +303,32 @@ class Push_notification extends MY_Controller {
 
     protected function send_notification($title, $body, $image)
     {
-        foreach ($this->main->getall('users', 'push_token', ['push_token' != NULL]) as $token)
-            $send[] = $token['token'];
-        
         $url = "https://fcm.googleapis.com/fcm/send";
         $serverKey = 'AAAA3t59HRQ:APA91bGeSIE1HbGaLe6JcgFkUZz403GFJCe2AvfuurH1B4xWJ46r-t-g7n_yQ2vm4jFSiHhcF2wthGWFLOF2V8EJxIUHZwzsLItg59MYc3U-Hdi59TXeHXeTCoBcTlh1vKkt54ymZZvd';
-        
         $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1', 'image' => base_url($image));
-        $arrayToSend = array('to' => implode(', ', $send), 'notification' => $notification, 'priority'=>'high');
-        $json = json_encode($arrayToSend);
 
-        $headers = array();
-        $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: key='. $serverKey;
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-        curl_exec($ch);
-        curl_close($ch);
-        unset($arrayToSend);
+        foreach ($this->main->getall('users', 'push_token', []) as $token){
+            if (strlen($token['push_token']) > 50){
+                // $send[] = $token['push_token'];
+                $arrayToSend = array('to' => $token['push_token'], 'notification' => $notification, 'priority'=>'high');
+                $json = json_encode($arrayToSend);
+                
+                $headers = array();
+                $headers[] = 'Content-Type: application/json';
+                $headers[] = 'Authorization: key='. $serverKey;
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+                curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                unset($arrayToSend);
+            }
+            else
+                continue;
+        }
         return;
     }
 }

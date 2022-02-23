@@ -5,9 +5,6 @@ if ( ! function_exists('verify_access'))
     function verify_access($name, $action)
     {
         $access = [
-            'banner' => ['list'],
-            'category' => ['list'],
-            'upcoming' => ['list'],
             'users' => ['list', 'add', 'update', 'delete']
         ];
 
@@ -33,9 +30,6 @@ if ( ! function_exists('check_access'))
     function check_access($name, $action)
     {
         $access = [
-            'banner' => ['list'],
-            'category' => ['list'],
-            'upcoming' => ['list'],
             'users' => ['list', 'add', 'update', 'delete']
         ];
 

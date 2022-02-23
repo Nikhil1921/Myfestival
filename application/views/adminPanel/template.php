@@ -69,12 +69,16 @@
               <li class="nav-item">
                 <?= anchor(admin(), '<i class="nav-icon fas fa-home"></i><p>Dashboard</p>', 'class="nav-link '.(($name == 'dashboard') ? 'active' : '').'"') ?>
               </li>
+              <?php if (check_access('upcoming', 'list')): ?>
               <li class="nav-item">
                 <?= anchor(admin('upcoming'), '<i class="nav-icon fas fa-calendar-check"></i><p>Upcoming Events</p>', 'class="nav-link '.(($name == 'upcoming') ? 'active' : '').'"') ?>
               </li>
+              <?php endif ?>
+              <?php if (check_access('category', 'list')): ?>
               <li class="nav-item">
                 <?= anchor(admin('category'), '<i class="nav-icon fas fa-image"></i><p>Category</p>', 'class="nav-link '.(($name == 'category') ? 'active' : '').'"') ?>
               </li>
+              <?php endif ?>
               <li class="nav-item">
                 <?= anchor(admin('users'), '<i class="nav-icon fas fa-users"></i><p>Users</p>', 'class="nav-link '.(($name == 'users') ? 'active' : '').'"') ?>
               </li>
@@ -88,12 +92,16 @@
                 <?= anchor(admin('sub-admin'), '<i class="nav-icon fas fa-users"></i><p>Sub Admin</p>', 'class="nav-link '.(($name == 'sub-admin') ? 'active' : '').'"') ?>
               </li>
               <?php endif ?>
+              <?php if (check_access('banner', 'list')): ?>
               <li class="nav-item">
                 <?= anchor(admin('banner'), '<i class="nav-icon fas fa-image"></i><p>Banners</p>', 'class="nav-link '.(($name == 'banner') ? 'active' : '').'"') ?>
               </li>
+              <?php endif ?>
+              <?php if (check_access('demo-frame', 'list')): ?>
               <li class="nav-item">
                 <?= anchor(admin('demo-frame'), '<i class="nav-icon fas fa-image"></i><p>Demo Frame</p>', 'class="nav-link '.(($name == 'demo_frame') ? 'active' : '').'"') ?>
               </li>
+              <?php endif ?>
               <li class="nav-item">
                 <?= anchor(admin('profile'), '<i class="nav-icon fas fa-user"></i><p>Profile</p>', 'class="nav-link '.(($name == 'profile') ? 'active' : '').'"') ?>
               </li>
